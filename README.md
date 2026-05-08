@@ -2,6 +2,17 @@
 
 Sistema de gestión de envíos terrestres y marítimos para SIATA Logistics. Prueba técnica nivel Senior — implementa todos los ítems requeridos y todos los bonus opcionales.
 
+## Demo en producción
+
+| Servicio | URL |
+|---|---|
+| **Frontend** | https://frontend-6xao78ml4-serandmoncas-6387s-projects.vercel.app |
+| **Backend API** | https://slogs-api-production.up.railway.app |
+| **Swagger UI** | https://slogs-api-production.up.railway.app/docs |
+| **Repositorio** | https://github.com/serandmoncas/slogs |
+
+**Credenciales de demo:** `admin@siata.co` / `admin1234`
+
 ---
 
 ## Stack tecnológico
