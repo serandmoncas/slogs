@@ -1,5 +1,8 @@
 # SLOGS — Siata Logistics System
 
+[![Backend CI](https://github.com/serandmoncas/slogs/actions/workflows/backend.yml/badge.svg)](https://github.com/serandmoncas/slogs/actions/workflows/backend.yml)
+[![CodeQL](https://github.com/serandmoncas/slogs/actions/workflows/codeql.yml/badge.svg)](https://github.com/serandmoncas/slogs/actions/workflows/codeql.yml)
+
 Sistema de gestión de envíos terrestres y marítimos para SIATA Logistics. Prueba técnica nivel Senior — implementa todos los ítems requeridos y todos los bonus opcionales.
 
 ## Demo en producción
@@ -269,21 +272,57 @@ slogs/
 │       ├── hooks/           # React Query hooks
 │       ├── lib/             # api.ts, auth.ts, styles.ts, format.ts
 │       └── types/           # TypeScript types
+├── .github/
+│   └── workflows/
+│       ├── backend.yml      # CI: pytest en cada push a backend/
+│       └── codeql.yml       # Security: análisis estático Python + TS
 ├── docs/
 │   ├── architecture.md      # Diagramas C4 (Mermaid)
+│   ├── PRESENTACION.md      # Guía de presentación técnica
 │   ├── er-diagram.svg       # Diagrama E-R
 │   ├── schema.sql           # Schema SQL exportado
-│   └── adr/                 # Architecture Decision Records
+│   └── adr/                 # Architecture Decision Records (6 ADRs)
 │       ├── ADR-001-monolito-vs-microservicios.md
 │       ├── ADR-002-tablas-separadas-envios.md
 │       ├── ADR-003-fastapi-vs-alternativas.md
 │       ├── ADR-004-jwt-stateless-vs-sesiones.md
 │       ├── ADR-005-repository-pattern-service-layer.md
 │       └── ADR-006-criterios-arquitectura.md
+├── .pre-commit-config.yaml  # Hooks: ruff + prettier + eslint + tsc
 ├── docker-compose.yml
 ├── .env.example
 └── README.md
 ```
+
+---
+
+## Calidad de código
+
+### Pre-commit hooks
+
+Cada commit pasa automáticamente por:
+
+| Hook | Qué verifica |
+|---|---|
+| `ruff` | Linting Python (E/W/F/I/B/UP) + imports ordenados |
+| `ruff-format` | Formato Python consistente |
+| `prettier` | Formato TypeScript/TSX |
+| `eslint` | Reglas Next.js (next/core-web-vitals) |
+| `tsc --noEmit` | TypeScript válido antes de cada commit |
+| `trailing-whitespace` | Sin espacios al final de línea |
+
+```bash
+# Instalar hooks (una vez por clonar)
+pip install pre-commit
+pre-commit install
+```
+
+### CI/CD — GitHub Actions
+
+| Workflow | Cuándo corre | Qué hace |
+|---|---|---|
+| `Backend CI` | Push/PR a `backend/` | pytest 37 tests + alembic migrations |
+| `CodeQL` | Push/PR a main + lunes | Análisis de seguridad estático Python + TS |
 
 ---
 
