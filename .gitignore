@@ -41,3 +41,5 @@ Thumbs.db
 backend/tests/__pycache__/
 .vercel
 *.tsbuildinfo
+vercel.json
+.vercel
