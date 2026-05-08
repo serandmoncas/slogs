@@ -15,7 +15,7 @@ import { colors, fonts, radius } from '@/lib/styles'
 import { formatCOP } from '@/lib/format'
 import type { EstadoEnvio } from '@/types'
 
-const ESTADOS = ['PENDIENTE', 'EN_TRÁNSITO', 'ENTREGADO', 'CANCELADO']
+const ESTADOS = ['PENDIENTE', 'EN_TRANSITO', 'ENTREGADO', 'CANCELADO']
 
 export default function EditTerrestrePage() {
   const params = useParams()

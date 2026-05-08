@@ -1,4 +1,4 @@
-export type EstadoEnvio = 'PENDIENTE' | 'EN_TRÁNSITO' | 'ENTREGADO' | 'CANCELADO'
+export type EstadoEnvio = 'PENDIENTE' | 'EN_TRANSITO' | 'ENTREGADO' | 'CANCELADO'
 export type TipoBodega = 'NACIONAL' | 'INTERNACIONAL'
 export type TipoPuerto = 'NACIONAL' | 'INTERNACIONAL'
 

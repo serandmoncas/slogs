@@ -9,7 +9,7 @@ import { colors, fonts, radius } from '@/lib/styles'
 import { formatCOP, formatDate } from '@/lib/format'
 import type { EnvioMaritimo, EstadoEnvio } from '@/types'
 
-const ESTADOS = ['', 'PENDIENTE', 'EN_TRÁNSITO', 'ENTREGADO', 'CANCELADO']
+const ESTADOS = ['', 'PENDIENTE', 'EN_TRANSITO', 'ENTREGADO', 'CANCELADO']
 
 export default function MaritimosPage() {
   const [estado, setEstado] = useState('')

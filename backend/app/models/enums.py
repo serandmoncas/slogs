@@ -13,6 +13,6 @@ class TipoPuerto(str, enum.Enum):
 
 class EstadoEnvio(str, enum.Enum):
     PENDIENTE = "PENDIENTE"
-    EN_TRANSITO = "EN_TRÁNSITO"
+    EN_TRANSITO = "EN_TRANSITO"
     ENTREGADO = "ENTREGADO"
     CANCELADO = "CANCELADO"

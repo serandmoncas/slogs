@@ -10,7 +10,7 @@ import { colors, fonts, radius } from '@/lib/styles'
 import { formatCOP, formatDate } from '@/lib/format'
 import type { EnvioTerrestre, EstadoEnvio } from '@/types'
 
-const ESTADOS = ['', 'PENDIENTE', 'EN_TRÁNSITO', 'ENTREGADO', 'CANCELADO']
+const ESTADOS = ['', 'PENDIENTE', 'EN_TRANSITO', 'ENTREGADO', 'CANCELADO']
 
 export default function TerrestresPage() {
   const { toast } = useToast()

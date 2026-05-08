@@ -3,7 +3,7 @@ import type { EstadoEnvio } from '@/types'
 
 const config: Record<EstadoEnvio, { label: string; color: string; bg: string }> = {
   PENDIENTE:    { label: 'Pendiente',    color: colors.amber, bg: colors.amberDim },
-  'EN_TRÁNSITO':{ label: 'En Tránsito', color: colors.blue,  bg: colors.blueDim  },
+  EN_TRANSITO:  { label: 'En Tránsito', color: colors.blue,  bg: colors.blueDim  },
   ENTREGADO:   { label: 'Entregado',    color: colors.green, bg: colors.greenDim },
   CANCELADO:   { label: 'Cancelado',    color: colors.red,   bg: colors.redDim   },
 }
