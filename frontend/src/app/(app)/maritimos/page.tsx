@@ -7,6 +7,7 @@ import StatusBadge from '@/components/StatusBadge'
 import DiscountBadge from '@/components/DiscountBadge'
 import { useToast } from '@/components/Toast'
 import { getToken } from '@/lib/auth'
+import { useCurrentUser } from '@/contexts/UserContext'
 import { colors, fonts, radius } from '@/lib/styles'
 import { formatCOP, formatDate } from '@/lib/format'
 import type { EnvioMaritimo, EstadoEnvio } from '@/types'
@@ -16,6 +17,7 @@ const API = process.env.NEXT_PUBLIC_API_URL ?? '/proxy/api/v1'
 
 export default function MaritimosPage() {
   const { toast } = useToast()
+  const { isAdmin } = useCurrentUser()
   const [estado, setEstado] = useState('')
   const [page, setPage] = useState(1)
   const { data, isLoading } = useEnviosMaritimos({ estado: estado || undefined, page, size: 15 })
@@ -49,10 +51,10 @@ export default function MaritimosPage() {
     { key: 'acciones', label: '', render: (r) => (
       <div style={{ display: 'flex', gap: 8 }}>
         <Link href={`/maritimos/${r.id}`} style={{ fontSize: 11, color: colors.blue, textDecoration: 'none' }}>Editar</Link>
-        <button onClick={() => { if (confirm('¿Eliminar?')) deleteMut.mutate(r.id) }}
+        {isAdmin && (<button onClick={() => { if (confirm('¿Eliminar?')) deleteMut.mutate(r.id) }}
           style={{ fontSize: 11, color: colors.red, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
           Eliminar
-        </button>
+        </button>)}
       </div>
     )},
   ]

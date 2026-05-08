@@ -41,3 +41,31 @@ def client(db):
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()
+
+
+@pytest.fixture()
+def admin_client(db):
+    """Client autenticado con rol admin — necesario para endpoints DELETE protegidos."""
+    from app.models.user import User
+    from passlib.context import CryptContext
+
+    pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    admin = User(
+        email="admin_test@test.co",
+        hashed_password=pwd_ctx.hash("admin1234"),
+        nombre="Admin Test",
+        rol="admin",
+    )
+    db.add(admin)
+    db.flush()
+
+    def override_get_db():
+        yield db
+
+    app.dependency_overrides[get_db] = override_get_db
+    with TestClient(app) as c:
+        login = c.post("/api/v1/auth/login", data={"username": "admin_test@test.co", "password": "admin1234"})
+        token = login.json()["access_token"]
+        c.headers.update({"Authorization": f"Bearer {token}"})
+        yield c
+    app.dependency_overrides.clear()

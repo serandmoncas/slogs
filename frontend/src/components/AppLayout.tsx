@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import Sidebar from './Sidebar'
 import Header from './Header'
 import LoadingSpinner from './LoadingSpinner'
+import { UserProvider } from '@/contexts/UserContext'
 import { colors } from '@/lib/styles'
 import { getToken } from '@/lib/auth'
 
@@ -31,14 +32,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', background: colors.bg }}>
-      <Sidebar />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <Header />
-        <main style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
-          {children}
-        </main>
+    <UserProvider>
+      <div style={{ display: 'flex', minHeight: '100vh', background: colors.bg }}>
+        <Sidebar />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+          <Header />
+          <main style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </UserProvider>
   )
 }

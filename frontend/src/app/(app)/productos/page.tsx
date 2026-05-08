@@ -2,11 +2,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useProductos, useDeleteProducto } from '@/hooks/useProductos'
+import { useCurrentUser } from '@/contexts/UserContext'
 import DataTable, { Column } from '@/components/DataTable'
 import { colors, fonts, radius } from '@/lib/styles'
 import type { Producto } from '@/types'
 
 export default function ProductosPage() {
+  const { isAdmin } = useCurrentUser()
   const [q, setQ] = useState('')
   const { data, isLoading } = useProductos({ q: q || undefined })
   const deleteMut = useDeleteProducto()
@@ -18,7 +20,7 @@ export default function ProductosPage() {
     { key: 'acciones', label: '', render: (r) => (
       <div style={{ display: 'flex', gap: 8 }}>
         <Link href={`/productos/${r.id}`} style={{ fontSize: 11, color: colors.blue, textDecoration: 'none' }}>Editar</Link>
-        <button onClick={() => { if (confirm('¿Eliminar?')) deleteMut.mutate(r.id) }} style={{ fontSize: 11, color: colors.red, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Eliminar</button>
+        {isAdmin && (<button onClick={() => { if (confirm('¿Eliminar?')) deleteMut.mutate(r.id) }} style={{ fontSize: 11, color: colors.red, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Eliminar</button>)}
       </div>
     )},
   ]

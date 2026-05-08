@@ -2,11 +2,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useClientes, useDeleteCliente } from '@/hooks/useClientes'
+import { useCurrentUser } from '@/contexts/UserContext'
 import DataTable, { Column } from '@/components/DataTable'
 import { colors, fonts, radius } from '@/lib/styles'
 import type { Cliente } from '@/types'
 
 export default function ClientesPage() {
+  const { isAdmin } = useCurrentUser()
   const [q, setQ] = useState('')
   const [page, setPage] = useState(1)
   const { data, isLoading } = useClientes({ q: q || undefined, page, size: 20 })
@@ -21,10 +23,10 @@ export default function ClientesPage() {
     { key: 'acciones', label: '', render: (r) => (
       <div style={{ display: 'flex', gap: 8 }}>
         <Link href={`/clientes/${r.id}`} style={{ fontSize: 11, color: colors.blue, textDecoration: 'none' }}>Editar</Link>
-        <button onClick={() => { if (confirm(`¿Eliminar a ${r.nombre}?`)) deleteMut.mutate(r.id) }}
+        {isAdmin && (<button onClick={() => { if (confirm(`¿Eliminar a ${r.nombre}?`)) deleteMut.mutate(r.id) }}
           style={{ fontSize: 11, color: colors.red, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
           Eliminar
-        </button>
+        </button>)}
       </div>
     )},
   ]

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.dependencies import get_current_user
+from app.dependencies import get_current_user, require_admin
 from app.schemas.bodega import BodegaCreate, BodegaUpdate, BodegaResponse
 from app.schemas.common import PaginatedResponse
 from app.services import bodega_service
@@ -35,6 +35,6 @@ def update_bodega(id: int, data: BodegaUpdate, db: Session = Depends(get_db)):
     return bodega_service.update_bodega(db, id, data)
 
 
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)])
 def delete_bodega(id: int, db: Session = Depends(get_db)):
     bodega_service.delete_bodega(db, id)

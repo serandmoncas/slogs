@@ -1,11 +1,13 @@
 'use client'
 import Link from 'next/link'
 import { useBodegas, useDeleteBodega } from '@/hooks/useBodegas'
+import { useCurrentUser } from '@/contexts/UserContext'
 import DataTable, { Column } from '@/components/DataTable'
 import { colors, fonts, radius } from '@/lib/styles'
 import type { Bodega } from '@/types'
 
 export default function BodegasPage() {
+  const { isAdmin } = useCurrentUser()
   const { data, isLoading } = useBodegas()
   const deleteMut = useDeleteBodega()
 
@@ -21,7 +23,7 @@ export default function BodegasPage() {
     { key: 'acciones', label: '', render: (r) => (
       <div style={{ display: 'flex', gap: 8 }}>
         <Link href={`/bodegas/${r.id}`} style={{ fontSize: 11, color: colors.blue, textDecoration: 'none' }}>Editar</Link>
-        <button onClick={() => { if (confirm('¿Eliminar?')) deleteMut.mutate(r.id) }} style={{ fontSize: 11, color: colors.red, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Eliminar</button>
+        {isAdmin && (<button onClick={() => { if (confirm('¿Eliminar?')) deleteMut.mutate(r.id) }} style={{ fontSize: 11, color: colors.red, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Eliminar</button>)}
       </div>
     )},
   ]

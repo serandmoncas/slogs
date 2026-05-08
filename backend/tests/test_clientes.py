@@ -71,18 +71,23 @@ def test_update_cliente_not_found(client):
     assert res.status_code == 404
 
 
-def test_delete_cliente(client):
-    token = _get_token(client)
-    created = client.post("/api/v1/clientes", json=_cliente_payload(), headers=_auth(token)).json()
-    res = client.delete(f"/api/v1/clientes/{created['id']}", headers=_auth(token))
+def test_delete_cliente(admin_client):
+    created = admin_client.post("/api/v1/clientes", json=_cliente_payload()).json()
+    res = admin_client.delete(f"/api/v1/clientes/{created['id']}")
     assert res.status_code == 204
-    res2 = client.get(f"/api/v1/clientes/{created['id']}", headers=_auth(token))
+    res2 = admin_client.get(f"/api/v1/clientes/{created['id']}")
     assert res2.status_code == 404
 
 
-def test_delete_cliente_not_found(client):
+def test_delete_cliente_requiere_admin(client):
     token = _get_token(client)
-    res = client.delete("/api/v1/clientes/99999", headers=_auth(token))
+    created = client.post("/api/v1/clientes", json=_cliente_payload("NIT-PERM-001"), headers=_auth(token)).json()
+    res = client.delete(f"/api/v1/clientes/{created['id']}", headers=_auth(token))
+    assert res.status_code == 403
+
+
+def test_delete_cliente_not_found(admin_client):
+    res = admin_client.delete("/api/v1/clientes/99999")
     assert res.status_code == 404
 
 

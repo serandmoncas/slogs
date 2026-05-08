@@ -1,11 +1,13 @@
 'use client'
 import Link from 'next/link'
 import { usePuertos, useDeletePuerto } from '@/hooks/usePuertos'
+import { useCurrentUser } from '@/contexts/UserContext'
 import DataTable, { Column } from '@/components/DataTable'
 import { colors, fonts, radius } from '@/lib/styles'
 import type { Puerto } from '@/types'
 
 export default function PuertosPage() {
+  const { isAdmin } = useCurrentUser()
   const { data, isLoading } = usePuertos()
   const deleteMut = useDeletePuerto()
 
@@ -22,7 +24,7 @@ export default function PuertosPage() {
     { key: 'acciones', label: '', render: (r) => (
       <div style={{ display: 'flex', gap: 8 }}>
         <Link href={`/puertos/${r.id}`} style={{ fontSize: 11, color: colors.blue, textDecoration: 'none' }}>Editar</Link>
-        <button onClick={() => { if (confirm('¿Eliminar?')) deleteMut.mutate(r.id) }} style={{ fontSize: 11, color: colors.red, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Eliminar</button>
+        {isAdmin && (<button onClick={() => { if (confirm('¿Eliminar?')) deleteMut.mutate(r.id) }} style={{ fontSize: 11, color: colors.red, background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>Eliminar</button>)}
       </div>
     )},
   ]

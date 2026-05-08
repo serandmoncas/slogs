@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.dependencies import get_current_user
+from app.dependencies import get_current_user, require_admin
 from app.schemas.cliente import ClienteCreate, ClienteUpdate, ClienteResponse
 from app.schemas.common import PaginatedResponse
 from app.services import cliente_service
@@ -35,6 +35,7 @@ def update_cliente(id: int, data: ClienteUpdate, db: Session = Depends(get_db)):
     return cliente_service.update_cliente(db, id, data)
 
 
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT,
+               dependencies=[Depends(require_admin)])
 def delete_cliente(id: int, db: Session = Depends(get_db)):
     cliente_service.delete_cliente(db, id)
