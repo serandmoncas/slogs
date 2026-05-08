@@ -40,3 +40,4 @@ Thumbs.db
 # Python bytecode en tests
 backend/tests/__pycache__/
 .vercel
+*.tsbuildinfo
