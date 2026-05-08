@@ -135,67 +135,121 @@ sequenceDiagram
 
 ---
 
-## 5. Diagrama de Base de Datos (ER simplificado)
+## 5. Modelo Entidad-Relación (Crow's Foot Notation)
+
+> Notación: `||` = exactamente uno · `o{` = cero o muchos · `|{` = uno o muchos
 
 ```mermaid
 erDiagram
-    CLIENTES {
-        serial id PK
-        varchar nit UK
-        varchar nombre
-        varchar email
-        varchar ciudad
-    }
-    PRODUCTOS {
-        serial id PK
-        varchar nombre
-        varchar categoria
-    }
-    BODEGAS {
-        serial id PK
-        varchar nombre
-        enum tipo "NACIONAL|INTERNACIONAL"
-    }
-    PUERTOS {
-        serial id PK
-        varchar codigo UK
-        varchar pais
-        enum tipo "NACIONAL|INTERNACIONAL"
-    }
-    ENVIOS_TERRESTRES {
-        serial id PK
-        varchar numero_guia UK
-        int cliente_id FK
-        int producto_id FK
-        int bodega_id FK
-        int cantidad
-        numeric precio_final
-        numeric descuento_pct "5% si cantidad>10"
-        varchar placa "^[A-Z]{3}[0-9]{3}$"
-        enum estado
-    }
-    ENVIOS_MARITIMOS {
-        serial id PK
-        varchar numero_guia UK
-        int cliente_id FK
-        int producto_id FK
-        int puerto_id FK
-        int cantidad
-        numeric precio_final
-        numeric descuento_pct "3% si cantidad>10"
-        varchar numero_flota "^[A-Z]{3}[0-9]{4}[A-Z]$"
-        enum estado
-    }
     USERS {
-        serial id PK
-        varchar email UK
-        varchar rol "admin|operador"
+        int     id              PK "autoincremento"
+        varchar email           UK "NOT NULL, único"
+        varchar hashed_password    "bcrypt, no reversible"
+        varchar nombre
+        varchar rol                "admin | operador"
+        bool    is_active          "default true"
+        ts      created_at
+        ts      updated_at
     }
 
-    CLIENTES ||--o{ ENVIOS_TERRESTRES : "realiza"
-    PRODUCTOS ||--o{ ENVIOS_TERRESTRES : "contiene"
-    BODEGAS ||--o{ ENVIOS_TERRESTRES : "almacena"
-    CLIENTES ||--o{ ENVIOS_MARITIMOS : "realiza"
-    PRODUCTOS ||--o{ ENVIOS_MARITIMOS : "contiene"
-    PUERTOS ||--o{ ENVIOS_MARITIMOS : "despacha"
+    CLIENTES {
+        int     id          PK
+        varchar nombre         "NOT NULL"
+        varchar nit         UK "NOT NULL, único en sistema"
+        varchar email
+        varchar telefono
+        varchar direccion
+        varchar ciudad
+        ts      created_at
+        ts      updated_at
+    }
+
+    PRODUCTOS {
+        int     id          PK
+        varchar nombre         "NOT NULL"
+        text    descripcion    "nullable"
+        varchar categoria      "NOT NULL"
+        ts      created_at
+        ts      updated_at
+    }
+
+    BODEGAS {
+        int     id          PK
+        varchar nombre         "NOT NULL"
+        varchar ciudad         "NOT NULL"
+        varchar direccion
+        int     capacidad       "unidades disponibles"
+        enum    tipo            "NACIONAL | INTERNACIONAL"
+        ts      created_at
+        ts      updated_at
+    }
+
+    PUERTOS {
+        int     id          PK
+        varchar nombre         "NOT NULL"
+        varchar ciudad         "NOT NULL"
+        varchar pais           "NOT NULL"
+        varchar codigo      UK "único, ej: CTG, BUN, MIA"
+        enum    tipo            "NACIONAL | INTERNACIONAL"
+        ts      created_at
+        ts      updated_at
+    }
+
+    ENVIOS_TERRESTRES {
+        int     id              PK
+        varchar numero_guia     UK "max 10 chars, único"
+        int     cliente_id      FK "→ clientes.id"
+        int     producto_id     FK "→ productos.id"
+        int     bodega_id       FK "→ bodegas.id"
+        int     cantidad           "gt 0"
+        date    fecha_registro     "auto = hoy, no editable"
+        date    fecha_entrega      "NOT NULL"
+        numeric precio_envio       "NUMERIC(12,2)"
+        numeric descuento_pct      "5.00 si cantidad > 10"
+        numeric precio_final       "calculado: envio*(1-desc)"
+        varchar placa              "regex [A-Z]{3}[0-9]{3}"
+        enum    estado             "PENDIENTE|EN_TRANSITO|ENTREGADO|CANCELADO"
+        ts      created_at
+        ts      updated_at
+    }
+
+    ENVIOS_MARITIMOS {
+        int     id              PK
+        varchar numero_guia     UK "max 10 chars, único"
+        int     cliente_id      FK "→ clientes.id"
+        int     producto_id     FK "→ productos.id"
+        int     puerto_id       FK "→ puertos.id"
+        int     cantidad           "gt 0"
+        date    fecha_registro     "auto = hoy, no editable"
+        date    fecha_entrega      "NOT NULL"
+        numeric precio_envio       "NUMERIC(12,2)"
+        numeric descuento_pct      "3.00 si cantidad > 10"
+        numeric precio_final       "calculado: envio*(1-desc)"
+        varchar numero_flota       "regex [A-Z]{3}[0-9]{4}[A-Z]"
+        enum    estado             "PENDIENTE|EN_TRANSITO|ENTREGADO|CANCELADO"
+        ts      created_at
+        ts      updated_at
+    }
+
+    %% ── Relaciones (crow's foot) ─────────────────────────────────────────
+    %% ||  = exactamente uno (lado maestro)
+    %% o{  = cero o muchos  (lado detalle — el "pie de cuervo")
+
+    CLIENTES   ||--o{ ENVIOS_TERRESTRES : "1 cliente  → N terrestres"
+    PRODUCTOS  ||--o{ ENVIOS_TERRESTRES : "1 producto → N terrestres"
+    BODEGAS    ||--o{ ENVIOS_TERRESTRES : "1 bodega   → N terrestres"
+
+    CLIENTES   ||--o{ ENVIOS_MARITIMOS  : "1 cliente  → N marítimos"
+    PRODUCTOS  ||--o{ ENVIOS_MARITIMOS  : "1 producto → N marítimos"
+    PUERTOS    ||--o{ ENVIOS_MARITIMOS  : "1 puerto   → N marítimos"
 ```
+
+### Lectura de la notación
+
+| Símbolo | Significado |
+|---|---|
+| `\|\|` | Exactamente uno (obligatorio) |
+| `o\|` | Cero o uno (opcional) |
+| `\|\{` | Uno o muchos (obligatorio) |
+| `o\{` | Cero o muchos — **pie de cuervo** (opcional) |
+| `--` | Línea de relación identificante |
