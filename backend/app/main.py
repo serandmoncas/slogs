@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import auth, clientes, productos, bodegas, puertos, envios, dashboard
+from app.routers import auth, clientes, productos, bodegas, puertos, envios, dashboard, export
 
 app = FastAPI(
     title="SLOGS — Siata Logistics API",
@@ -26,6 +26,7 @@ for router in [
     bodegas.router,
     puertos.router,
     envios.router,
+    export.router,
     dashboard.router,
 ]:
     app.include_router(router, prefix="/api/v1")

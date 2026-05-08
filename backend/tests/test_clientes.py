@@ -19,15 +19,13 @@ def _cliente_payload(nit="900000001-1"):
     }
 
 
-def test_list_returns_paginated_response(client):
+def test_list_empty(client):
     token = _get_token(client)
     res = client.get("/api/v1/clientes", headers=_auth(token))
     assert res.status_code == 200
     body = res.json()
-    assert "items" in body
-    assert "total" in body
-    assert "page" in body
-    assert "size" in body
+    assert body["items"] == []
+    assert body["total"] == 0
     assert body["page"] == 1
 
 

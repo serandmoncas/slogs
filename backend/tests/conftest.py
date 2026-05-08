@@ -1,14 +1,14 @@
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from app.main import app
 from app.database import get_db
 from app.models.base import Base
 
-# usa la misma BD pero en schema aislado para tests
-TEST_DATABASE_URL = "postgresql://slogs:slogs_dev@db:5432/slogs_db"
+# BD exclusiva para tests — nunca toca slogs_db (desarrollo)
+TEST_DATABASE_URL = "postgresql://slogs:slogs_dev@db:5432/slogs_test"
 
 engine = create_engine(TEST_DATABASE_URL)
 TestingSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -18,7 +18,7 @@ TestingSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 def setup_db():
     Base.metadata.create_all(bind=engine)
     yield
-    # NO drop_all — las tablas son compartidas con datos de desarrollo
+    Base.metadata.drop_all(bind=engine)
 
 
 @pytest.fixture()

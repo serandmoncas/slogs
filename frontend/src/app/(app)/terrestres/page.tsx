@@ -6,15 +6,34 @@ import DataTable, { Column } from '@/components/DataTable'
 import StatusBadge from '@/components/StatusBadge'
 import DiscountBadge from '@/components/DiscountBadge'
 import { useToast } from '@/components/Toast'
+import { getToken } from '@/lib/auth'
 import { colors, fonts, radius } from '@/lib/styles'
 import { formatCOP, formatDate } from '@/lib/format'
 import type { EnvioTerrestre, EstadoEnvio } from '@/types'
+
+const API = process.env.NEXT_PUBLIC_API_URL ?? '/proxy/api/v1'
 
 const ESTADOS = ['', 'PENDIENTE', 'EN_TRANSITO', 'ENTREGADO', 'CANCELADO']
 
 export default function TerrestresPage() {
   const { toast } = useToast()
   const [estado, setEstado] = useState('')
+
+  const handleExport = () => {
+    const params = new URLSearchParams()
+    if (estado) params.set('estado', estado)
+    if (fechaInicio) params.set('fecha_inicio', fechaInicio)
+    if (fechaFin) params.set('fecha_fin', fechaFin)
+    const token = getToken()
+    fetch(`${API}/envios/terrestres/export?${params}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    }).then((r) => r.blob()).then((blob) => {
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url; a.download = `terrestres_${new Date().toISOString().slice(0,10)}.csv`
+      a.click(); URL.revokeObjectURL(url)
+    }).catch(() => toast('Error al exportar', 'error'))
+  }
   const [fechaInicio, setFechaInicio] = useState('')
   const [fechaFin, setFechaFin] = useState('')
   const [page, setPage] = useState(1)
@@ -59,13 +78,22 @@ export default function TerrestresPage() {
         <h1 style={{ fontFamily: fonts.display, fontSize: 24, fontWeight: 700, color: colors.text, margin: 0 }}>
           Envíos Terrestres
         </h1>
-        <Link href="/terrestres/nuevo" style={{
-          padding: '8px 18px', background: colors.amber, color: '#0B1220',
-          borderRadius: radius.md, fontFamily: fonts.display, fontWeight: 700,
-          fontSize: 14, textDecoration: 'none', letterSpacing: '0.03em',
-        }}>
-          + Nuevo Envío
-        </Link>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={handleExport} style={{
+            padding: '8px 16px', background: 'none',
+            border: `1px solid ${colors.border}`, borderRadius: radius.md,
+            color: colors.textMuted, fontFamily: fonts.body, fontSize: 13, cursor: 'pointer',
+          }}>
+            ↓ CSV
+          </button>
+          <Link href="/terrestres/nuevo" style={{
+            padding: '8px 18px', background: colors.amber, color: '#0B1220',
+            borderRadius: radius.md, fontFamily: fonts.display, fontWeight: 700,
+            fontSize: 14, textDecoration: 'none', letterSpacing: '0.03em',
+          }}>
+            + Nuevo Envío
+          </Link>
+        </div>
       </div>
 
       {/* Filtros */}
