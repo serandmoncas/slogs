@@ -270,8 +270,16 @@ slogs/
 │       ├── lib/             # api.ts, auth.ts, styles.ts, format.ts
 │       └── types/           # TypeScript types
 ├── docs/
+│   ├── architecture.md      # Diagramas C4 (Mermaid)
+│   ├── er-diagram.svg       # Diagrama E-R
 │   ├── schema.sql           # Schema SQL exportado
-│   └── er-diagram.svg       # Diagrama E-R
+│   └── adr/                 # Architecture Decision Records
+│       ├── ADR-001-monolito-vs-microservicios.md
+│       ├── ADR-002-tablas-separadas-envios.md
+│       ├── ADR-003-fastapi-vs-alternativas.md
+│       ├── ADR-004-jwt-stateless-vs-sesiones.md
+│       ├── ADR-005-repository-pattern-service-layer.md
+│       └── ADR-006-criterios-arquitectura.md
 ├── docker-compose.yml
 ├── .env.example
 └── README.md

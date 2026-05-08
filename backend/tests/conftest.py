@@ -1,3 +1,4 @@
+import os
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -7,8 +8,11 @@ from app.main import app
 from app.database import get_db
 from app.models.base import Base
 
-# BD exclusiva para tests — nunca toca slogs_db (desarrollo)
-TEST_DATABASE_URL = "postgresql://slogs:slogs_dev@db:5432/slogs_test"
+# Configurable via env para CI (GitHub Actions usa localhost, Docker usa db)
+TEST_DATABASE_URL = os.getenv(
+    "TEST_DATABASE_URL",
+    "postgresql://slogs:slogs_dev@db:5432/slogs_test",
+)
 
 engine = create_engine(TEST_DATABASE_URL)
 TestingSession = sessionmaker(autocommit=False, autoflush=False, bind=engine)
