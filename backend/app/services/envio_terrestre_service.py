@@ -1,14 +1,18 @@
 from datetime import date
 from decimal import Decimal
+
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.models.envio_terrestre import EnvioTerrestre
-from app.schemas.envio_terrestre import EnvioTerrestreCreate, EnvioTerrestreUpdate
-from app.schemas.common import PaginatedResponse
-from app.schemas.envio_terrestre import EnvioTerrestreResponse
 from app.models.enums import EstadoEnvio
+from app.models.envio_terrestre import EnvioTerrestre
 from app.repositories import envio_terrestre_repo
+from app.schemas.common import PaginatedResponse
+from app.schemas.envio_terrestre import (
+    EnvioTerrestreCreate,
+    EnvioTerrestreResponse,
+    EnvioTerrestreUpdate,
+)
 
 
 def calcular_descuento_terrestre(cantidad: int) -> Decimal:
@@ -28,20 +32,27 @@ def list_envios(
     page: int,
     size: int,
 ) -> PaginatedResponse[EnvioTerrestreResponse]:
-    items, total = envio_terrestre_repo.list_all(db, estado, fecha_inicio, fecha_fin, cliente_id, page, size)
+    items, total = envio_terrestre_repo.list_all(
+        db, estado, fecha_inicio, fecha_fin, cliente_id, page, size
+    )
     return PaginatedResponse(items=items, total=total, page=page, size=size)
 
 
 def get_envio(db: Session, id: int) -> EnvioTerrestre:
     obj = envio_terrestre_repo.get_by_id(db, id)
     if not obj:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Envío terrestre no encontrado.")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Envío terrestre no encontrado."
+        )
     return obj
 
 
 def create_envio(db: Session, data: EnvioTerrestreCreate) -> EnvioTerrestre:
     if envio_terrestre_repo.get_by_numero_guia(db, data.numero_guia):
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Ya existe un envío con ese número de guía.")
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Ya existe un envío con ese número de guía.",
+        )
 
     descuento_pct = calcular_descuento_terrestre(data.cantidad)
     precio_final = calcular_precio_final(data.precio_envio, descuento_pct)
@@ -60,7 +71,10 @@ def update_envio(db: Session, id: int, data: EnvioTerrestreUpdate) -> EnvioTerre
 
     if data.numero_guia and data.numero_guia != obj.numero_guia:
         if envio_terrestre_repo.get_by_numero_guia(db, data.numero_guia):
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Ya existe un envío con ese número de guía.")
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Ya existe un envío con ese número de guía.",
+            )
 
     changes = data.model_dump(exclude_unset=True)
 

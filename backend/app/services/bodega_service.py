@@ -2,13 +2,14 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.models.bodega import Bodega
-from app.schemas.bodega import BodegaCreate, BodegaUpdate
-from app.schemas.common import PaginatedResponse
-from app.schemas.bodega import BodegaResponse
 from app.repositories import bodega_repo
+from app.schemas.bodega import BodegaCreate, BodegaResponse, BodegaUpdate
+from app.schemas.common import PaginatedResponse
 
 
-def list_bodegas(db: Session, q: str | None, page: int, size: int) -> PaginatedResponse[BodegaResponse]:
+def list_bodegas(
+    db: Session, q: str | None, page: int, size: int
+) -> PaginatedResponse[BodegaResponse]:
     items, total = bodega_repo.list_all(db, q, page, size)
     return PaginatedResponse(items=items, total=total, page=page, size=size)
 

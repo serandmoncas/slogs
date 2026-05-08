@@ -1,18 +1,28 @@
 from datetime import date
+
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.dependencies import get_current_user
 from app.models.enums import EstadoEnvio
-from app.schemas.envio_terrestre import EnvioTerrestreCreate, EnvioTerrestreUpdate, EnvioTerrestreResponse
-from app.schemas.envio_maritimo import EnvioMaritimoCreate, EnvioMaritimoUpdate, EnvioMaritimoResponse
 from app.schemas.common import PaginatedResponse
-from app.services import envio_terrestre_service, envio_maritimo_service
+from app.schemas.envio_maritimo import (
+    EnvioMaritimoCreate,
+    EnvioMaritimoResponse,
+    EnvioMaritimoUpdate,
+)
+from app.schemas.envio_terrestre import (
+    EnvioTerrestreCreate,
+    EnvioTerrestreResponse,
+    EnvioTerrestreUpdate,
+)
+from app.services import envio_maritimo_service, envio_terrestre_service
 
 router = APIRouter(prefix="/envios", tags=["Envíos"], dependencies=[Depends(get_current_user)])
 
 # ── Terrestres ──────────────────────────────────────────────────────────────
+
 
 @router.get("/terrestres", response_model=PaginatedResponse[EnvioTerrestreResponse])
 def list_terrestres(
@@ -24,10 +34,14 @@ def list_terrestres(
     size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
 ):
-    return envio_terrestre_service.list_envios(db, estado, fecha_inicio, fecha_fin, cliente_id, page, size)
+    return envio_terrestre_service.list_envios(
+        db, estado, fecha_inicio, fecha_fin, cliente_id, page, size
+    )
 
 
-@router.post("/terrestres", response_model=EnvioTerrestreResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/terrestres", response_model=EnvioTerrestreResponse, status_code=status.HTTP_201_CREATED
+)
 def create_terrestre(data: EnvioTerrestreCreate, db: Session = Depends(get_db)):
     return envio_terrestre_service.create_envio(db, data)
 
@@ -49,6 +63,7 @@ def delete_terrestre(id: int, db: Session = Depends(get_db)):
 
 # ── Marítimos ────────────────────────────────────────────────────────────────
 
+
 @router.get("/maritimos", response_model=PaginatedResponse[EnvioMaritimoResponse])
 def list_maritimos(
     estado: EstadoEnvio | None = Query(None),
@@ -59,10 +74,14 @@ def list_maritimos(
     size: int = Query(20, ge=1, le=100),
     db: Session = Depends(get_db),
 ):
-    return envio_maritimo_service.list_envios(db, estado, fecha_inicio, fecha_fin, cliente_id, page, size)
+    return envio_maritimo_service.list_envios(
+        db, estado, fecha_inicio, fecha_fin, cliente_id, page, size
+    )
 
 
-@router.post("/maritimos", response_model=EnvioMaritimoResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/maritimos", response_model=EnvioMaritimoResponse, status_code=status.HTTP_201_CREATED
+)
 def create_maritimo(data: EnvioMaritimoCreate, db: Session = Depends(get_db)):
     return envio_maritimo_service.create_envio(db, data)
 

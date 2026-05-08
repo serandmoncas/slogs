@@ -1,8 +1,9 @@
 from datetime import date
-from decimal import Decimal
+
 from sqlalchemy.orm import Session, joinedload
-from app.models.envio_terrestre import EnvioTerrestre
+
 from app.models.enums import EstadoEnvio
+from app.models.envio_terrestre import EnvioTerrestre
 
 
 def list_all(
@@ -33,11 +34,16 @@ def list_all(
 
 
 def get_by_id(db: Session, id: int) -> EnvioTerrestre | None:
-    return db.query(EnvioTerrestre).options(
-        joinedload(EnvioTerrestre.cliente),
-        joinedload(EnvioTerrestre.producto),
-        joinedload(EnvioTerrestre.bodega),
-    ).filter(EnvioTerrestre.id == id).first()
+    return (
+        db.query(EnvioTerrestre)
+        .options(
+            joinedload(EnvioTerrestre.cliente),
+            joinedload(EnvioTerrestre.producto),
+            joinedload(EnvioTerrestre.bodega),
+        )
+        .filter(EnvioTerrestre.id == id)
+        .first()
+    )
 
 
 def get_by_numero_guia(db: Session, numero_guia: str) -> EnvioTerrestre | None:

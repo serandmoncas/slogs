@@ -1,11 +1,12 @@
 from datetime import date
 from decimal import Decimal
+
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from app.models.envio_terrestre import EnvioTerrestre
-from app.models.envio_maritimo import EnvioMaritimo
 from app.models.enums import EstadoEnvio
+from app.models.envio_maritimo import EnvioMaritimo
+from app.models.envio_terrestre import EnvioTerrestre
 from app.schemas.dashboard import DashboardStats, EstadoStats
 
 
@@ -19,11 +20,13 @@ def get_stats(db: Session) -> DashboardStats:
     entregados_hoy = (
         db.query(func.count(EnvioTerrestre.id))
         .filter(EnvioTerrestre.estado == EstadoEnvio.ENTREGADO, EnvioTerrestre.fecha_entrega == hoy)
-        .scalar() or 0
+        .scalar()
+        or 0
     ) + (
         db.query(func.count(EnvioMaritimo.id))
         .filter(EnvioMaritimo.estado == EstadoEnvio.ENTREGADO, EnvioMaritimo.fecha_entrega == hoy)
-        .scalar() or 0
+        .scalar()
+        or 0
     )
 
     ingresos_t = db.query(func.coalesce(func.sum(EnvioTerrestre.precio_final), 0)).filter(
@@ -39,10 +42,14 @@ def get_stats(db: Session) -> DashboardStats:
         return db.query(func.count(modelo.id)).filter(modelo.estado == estado).scalar() or 0
 
     por_estado = EstadoStats(
-        PENDIENTE=_count_estado(EnvioTerrestre, EstadoEnvio.PENDIENTE) + _count_estado(EnvioMaritimo, EstadoEnvio.PENDIENTE),
-        EN_TRANSITO=_count_estado(EnvioTerrestre, EstadoEnvio.EN_TRANSITO) + _count_estado(EnvioMaritimo, EstadoEnvio.EN_TRANSITO),
-        ENTREGADO=_count_estado(EnvioTerrestre, EstadoEnvio.ENTREGADO) + _count_estado(EnvioMaritimo, EstadoEnvio.ENTREGADO),
-        CANCELADO=_count_estado(EnvioTerrestre, EstadoEnvio.CANCELADO) + _count_estado(EnvioMaritimo, EstadoEnvio.CANCELADO),
+        PENDIENTE=_count_estado(EnvioTerrestre, EstadoEnvio.PENDIENTE)
+        + _count_estado(EnvioMaritimo, EstadoEnvio.PENDIENTE),
+        EN_TRANSITO=_count_estado(EnvioTerrestre, EstadoEnvio.EN_TRANSITO)
+        + _count_estado(EnvioMaritimo, EstadoEnvio.EN_TRANSITO),
+        ENTREGADO=_count_estado(EnvioTerrestre, EstadoEnvio.ENTREGADO)
+        + _count_estado(EnvioMaritimo, EstadoEnvio.ENTREGADO),
+        CANCELADO=_count_estado(EnvioTerrestre, EstadoEnvio.CANCELADO)
+        + _count_estado(EnvioMaritimo, EstadoEnvio.CANCELADO),
     )
 
     return DashboardStats(

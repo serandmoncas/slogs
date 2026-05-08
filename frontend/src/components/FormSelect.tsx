@@ -1,7 +1,10 @@
 'use client'
 import { colors, fonts, radius } from '@/lib/styles'
 
-interface Option { value: string; label: string }
+interface Option {
+  value: string
+  label: string
+}
 
 interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
   label: string
@@ -14,7 +17,9 @@ interface Props extends React.SelectHTMLAttributes<HTMLSelectElement> {
 export default function FormSelect({ label, options, error, hint, placeholder, ...props }: Props) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <label style={{ fontSize: 12, fontFamily: fonts.body, color: colors.textMuted, fontWeight: 500 }}>
+      <label
+        style={{ fontSize: 12, fontFamily: fonts.body, color: colors.textMuted, fontWeight: 500 }}
+      >
         {label}
       </label>
       <select
@@ -36,13 +41,21 @@ export default function FormSelect({ label, options, error, hint, placeholder, .
       >
         {placeholder && <option value="">{placeholder}</option>}
         {options.map((o) => (
-          <option key={o.value} value={o.value} style={{ background: colors.panelAlt, color: colors.text }}>
+          <option
+            key={o.value}
+            value={o.value}
+            style={{ background: colors.panelAlt, color: colors.text }}
+          >
             {o.label}
           </option>
         ))}
       </select>
-      {error && <span style={{ fontSize: 11, color: colors.red, fontFamily: fonts.body }}>{error}</span>}
-      {hint && !error && <span style={{ fontSize: 11, color: colors.textDim, fontFamily: fonts.body }}>{hint}</span>}
+      {error && (
+        <span style={{ fontSize: 11, color: colors.red, fontFamily: fonts.body }}>{error}</span>
+      )}
+      {hint && !error && (
+        <span style={{ fontSize: 11, color: colors.textDim, fontFamily: fonts.body }}>{hint}</span>
+      )}
     </div>
   )
 }

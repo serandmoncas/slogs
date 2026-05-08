@@ -5,9 +5,9 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.dependencies import get_current_user, require_admin
 from app.models.user import User
-from app.schemas.user import UserCreate, UserResponse, Token
-from app.services import auth_service
 from app.repositories import user_repo
+from app.schemas.user import Token, UserCreate, UserResponse
+from app.services import auth_service
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
@@ -30,10 +30,12 @@ def me(current_user: User = Depends(get_current_user)):
     return current_user
 
 
-@router.patch("/usuarios/{id}/rol", response_model=UserResponse,
-              dependencies=[Depends(require_admin)])
+@router.patch(
+    "/usuarios/{id}/rol", response_model=UserResponse, dependencies=[Depends(require_admin)]
+)
 def cambiar_rol(id: int, rol: str, db: Session = Depends(get_db)):
     from fastapi import HTTPException
+
     if rol not in ("admin", "operador"):
         raise HTTPException(status_code=400, detail="Rol inválido. Use 'admin' o 'operador'.")
     user = user_repo.get_by_id(db, id)

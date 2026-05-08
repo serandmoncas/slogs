@@ -1,6 +1,8 @@
 from datetime import date
 from decimal import Decimal
-from sqlalchemy import String, Integer, Date, Numeric, ForeignKey, Enum as SAEnum
+
+from sqlalchemy import Date, ForeignKey, Integer, Numeric, String
+from sqlalchemy import Enum as SAEnum
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.models.base import Base, TimestampMixin

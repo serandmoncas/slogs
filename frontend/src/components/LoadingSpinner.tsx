@@ -1,6 +1,8 @@
 import { colors } from '@/lib/styles'
 
-interface Props { size?: number }
+interface Props {
+  size?: number
+}
 
 export default function LoadingSpinner({ size = 24 }: Props) {
   return (

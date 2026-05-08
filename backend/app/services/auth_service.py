@@ -1,12 +1,13 @@
-from datetime import datetime, timedelta, timezone
-from jose import JWTError, jwt
+from datetime import UTC, datetime, timedelta
+
 from fastapi import HTTPException, status
+from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
 from app.config import settings
 from app.models.user import User
-from app.schemas.user import UserCreate, TokenData
 from app.repositories import user_repo
+from app.schemas.user import TokenData, UserCreate
 
 
 def register(db: Session, data: UserCreate) -> User:
@@ -31,9 +32,7 @@ def authenticate(db: Session, email: str, password: str) -> User:
 
 def create_access_token(data: dict) -> str:
     payload = data.copy()
-    payload["exp"] = datetime.now(timezone.utc) + timedelta(
-        minutes=settings.access_token_expire_minutes
-    )
+    payload["exp"] = datetime.now(UTC) + timedelta(minutes=settings.access_token_expire_minutes)
     return jwt.encode(payload, settings.secret_key, algorithm=settings.algorithm)
 
 

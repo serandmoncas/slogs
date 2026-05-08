@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+
 from app.models.cliente import Cliente
 from app.schemas.cliente import ClienteCreate, ClienteUpdate
 
@@ -7,7 +8,9 @@ def list_all(db: Session, q: str | None, page: int, size: int) -> tuple[list[Cli
     query = db.query(Cliente)
     if q:
         like = f"%{q}%"
-        query = query.filter(Cliente.nombre.ilike(like) | Cliente.nit.ilike(like) | Cliente.ciudad.ilike(like))
+        query = query.filter(
+            Cliente.nombre.ilike(like) | Cliente.nit.ilike(like) | Cliente.ciudad.ilike(like)
+        )
     total = query.count()
     items = query.offset((page - 1) * size).limit(size).all()
     return items, total

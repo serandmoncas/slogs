@@ -22,8 +22,8 @@ export function useToast() {
 
 const TYPE_COLORS: Record<ToastType, { bg: string; border: string; text: string }> = {
   success: { bg: `${colors.green}15`, border: `${colors.green}40`, text: colors.green },
-  error:   { bg: `${colors.red}15`,   border: `${colors.red}40`,   text: colors.red   },
-  info:    { bg: `${colors.blue}15`,  border: `${colors.blue}40`,  text: colors.blue  },
+  error: { bg: `${colors.red}15`, border: `${colors.red}40`, text: colors.red },
+  info: { bg: `${colors.blue}15`, border: `${colors.blue}40`, text: colors.blue },
 }
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
@@ -38,26 +38,36 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={{ toast }}>
       {children}
-      <div style={{
-        position: 'fixed', bottom: 24, right: 24,
-        display: 'flex', flexDirection: 'column', gap: 8,
-        zIndex: 9999, pointerEvents: 'none',
-      }}>
+      <div
+        style={{
+          position: 'fixed',
+          bottom: 24,
+          right: 24,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 8,
+          zIndex: 9999,
+          pointerEvents: 'none',
+        }}
+      >
         {toasts.map((t) => {
           const c = TYPE_COLORS[t.type]
           return (
-            <div key={t.id} style={{
-              background: c.bg,
-              border: `1px solid ${c.border}`,
-              borderRadius: radius.md,
-              padding: '10px 16px',
-              color: c.text,
-              fontFamily: fonts.body,
-              fontSize: 13,
-              maxWidth: 320,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
-              animation: 'slideIn 0.2s ease',
-            }}>
+            <div
+              key={t.id}
+              style={{
+                background: c.bg,
+                border: `1px solid ${c.border}`,
+                borderRadius: radius.md,
+                padding: '10px 16px',
+                color: c.text,
+                fontFamily: fonts.body,
+                fontSize: 13,
+                maxWidth: 320,
+                boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+                animation: 'slideIn 0.2s ease',
+              }}
+            >
               {t.message}
             </div>
           )

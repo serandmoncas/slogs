@@ -1,11 +1,12 @@
 import os
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.main import app
 from app.database import get_db
+from app.main import app
 from app.models.base import Base
 
 # Configurable via env para CI (GitHub Actions usa localhost, Docker usa db)
@@ -50,8 +51,9 @@ def client(db):
 @pytest.fixture()
 def admin_client(db):
     """Client autenticado con rol admin — necesario para endpoints DELETE protegidos."""
-    from app.models.user import User
     from passlib.context import CryptContext
+
+    from app.models.user import User
 
     pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
     admin = User(
@@ -68,7 +70,9 @@ def admin_client(db):
 
     app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as c:
-        login = c.post("/api/v1/auth/login", data={"username": "admin_test@test.co", "password": "admin1234"})
+        login = c.post(
+            "/api/v1/auth/login", data={"username": "admin_test@test.co", "password": "admin1234"}
+        )
         token = login.json()["access_token"]
         c.headers.update({"Authorization": f"Bearer {token}"})
         yield c

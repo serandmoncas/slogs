@@ -1,7 +1,9 @@
 import re
 from datetime import date, datetime
 from decimal import Decimal
-from pydantic import BaseModel, field_validator, Field
+
+from pydantic import BaseModel, Field, field_validator
+
 from app.models.enums import EstadoEnvio
 from app.schemas.cliente import ClienteResponse
 from app.schemas.producto import ProductoResponse
@@ -22,7 +24,9 @@ class EnvioMaritimoCreate(BaseModel):
     @classmethod
     def validate_numero_flota(cls, v: str) -> str:
         if not re.match(r"^[A-Z]{3}[0-9]{4}[A-Z]$", v):
-            raise ValueError("Número de flota inválido. Formato requerido: ABC1234D (3 letras + 4 dígitos + 1 letra).")
+            raise ValueError(
+                "Número de flota inválido. Formato requerido: ABC1234D (3 letras + 4 dígitos + 1 letra)."
+            )
         return v
 
 
@@ -41,7 +45,9 @@ class EnvioMaritimoUpdate(BaseModel):
     @classmethod
     def validate_numero_flota(cls, v: str | None) -> str | None:
         if v is not None and not re.match(r"^[A-Z]{3}[0-9]{4}[A-Z]$", v):
-            raise ValueError("Número de flota inválido. Formato requerido: ABC1234D (3 letras + 4 dígitos + 1 letra).")
+            raise ValueError(
+                "Número de flota inválido. Formato requerido: ABC1234D (3 letras + 4 dígitos + 1 letra)."
+            )
         return v
 
 

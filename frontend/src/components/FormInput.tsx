@@ -12,7 +12,9 @@ export default function FormInput({ label, error, hint, ...props }: Props) {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-      <label style={{ fontSize: 12, fontFamily: fonts.body, color: colors.textMuted, fontWeight: 500 }}>
+      <label
+        style={{ fontSize: 12, fontFamily: fonts.body, color: colors.textMuted, fontWeight: 500 }}
+      >
         {label}
       </label>
       <input
@@ -40,8 +42,12 @@ export default function FormInput({ label, error, hint, ...props }: Props) {
           props.onBlur?.(e)
         }}
       />
-      {error && <span style={{ fontSize: 11, color: colors.red, fontFamily: fonts.body }}>{error}</span>}
-      {hint && !error && <span style={{ fontSize: 11, color: colors.textDim, fontFamily: fonts.body }}>{hint}</span>}
+      {error && (
+        <span style={{ fontSize: 11, color: colors.red, fontFamily: fonts.body }}>{error}</span>
+      )}
+      {hint && !error && (
+        <span style={{ fontSize: 11, color: colors.textDim, fontFamily: fonts.body }}>{hint}</span>
+      )}
     </div>
   )
 }

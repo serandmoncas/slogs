@@ -1,11 +1,13 @@
 import re
 from datetime import date, datetime
 from decimal import Decimal
-from pydantic import BaseModel, field_validator, Field
+
+from pydantic import BaseModel, Field, field_validator
+
 from app.models.enums import EstadoEnvio
+from app.schemas.bodega import BodegaResponse
 from app.schemas.cliente import ClienteResponse
 from app.schemas.producto import ProductoResponse
-from app.schemas.bodega import BodegaResponse
 
 
 class EnvioTerrestreCreate(BaseModel):
@@ -22,7 +24,9 @@ class EnvioTerrestreCreate(BaseModel):
     @classmethod
     def validate_placa(cls, v: str) -> str:
         if not re.match(r"^[A-Z]{3}[0-9]{3}$", v):
-            raise ValueError("Placa inválida. Formato requerido: ABC123 (3 letras mayúsculas + 3 dígitos).")
+            raise ValueError(
+                "Placa inválida. Formato requerido: ABC123 (3 letras mayúsculas + 3 dígitos)."
+            )
         return v
 
 
@@ -41,7 +45,9 @@ class EnvioTerrestreUpdate(BaseModel):
     @classmethod
     def validate_placa(cls, v: str | None) -> str | None:
         if v is not None and not re.match(r"^[A-Z]{3}[0-9]{3}$", v):
-            raise ValueError("Placa inválida. Formato requerido: ABC123 (3 letras mayúsculas + 3 dígitos).")
+            raise ValueError(
+                "Placa inválida. Formato requerido: ABC123 (3 letras mayúsculas + 3 dígitos)."
+            )
         return v
 
 

@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
-from app.routers import auth, clientes, productos, bodegas, puertos, envios, dashboard, export
+from app.routers import auth, bodegas, clientes, dashboard, envios, export, productos, puertos
 
 app = FastAPI(
     title="SLOGS — Siata Logistics API",

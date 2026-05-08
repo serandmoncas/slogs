@@ -22,10 +22,15 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   if (!ready) {
     return (
-      <div style={{
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        minHeight: '100vh', background: colors.bg,
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+          background: colors.bg,
+        }}
+      >
         <LoadingSpinner size={36} />
       </div>
     )
@@ -37,9 +42,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <Sidebar />
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
           <Header />
-          <main style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>
-            {children}
-          </main>
+          <main style={{ flex: 1, padding: '24px', overflowY: 'auto' }}>{children}</main>
         </div>
       </div>
     </UserProvider>

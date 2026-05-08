@@ -1,17 +1,20 @@
 'use client'
 import { colors } from '@/lib/styles'
 
-interface Ruta { origen: string; destino: string }
+interface Ruta {
+  origen: string
+  destino: string
+}
 
 const CITIES: Record<string, [number, number]> = {
-  Bogotá:        [155, 195],
-  Medellín:      [110, 155],
-  Cali:          [105, 235],
-  Barranquilla:  [138, 58],
-  Cartagena:     [115, 65],
-  Buenaventura:  [88, 230],
+  Bogotá: [155, 195],
+  Medellín: [110, 155],
+  Cali: [105, 235],
+  Barranquilla: [138, 58],
+  Cartagena: [115, 65],
+  Buenaventura: [88, 230],
   'Santa Marta': [158, 52],
-  Pereira:       [112, 190],
+  Pereira: [112, 190],
 }
 
 const COLOMBIA_PATH =
@@ -50,7 +53,10 @@ export default function ColombiaMap({ rutas = [] }: { rutas?: Ruta[] }) {
           </radialGradient>
           <filter id="city-glow">
             <feGaussianBlur stdDeviation="2" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
           </filter>
         </defs>
 
@@ -67,12 +73,28 @@ export default function ColombiaMap({ rutas = [] }: { rutas?: Ruta[] }) {
 
         {/* grid tenue */}
         {[80, 120, 160, 200, 240, 280].map((y) => (
-          <line key={y} x1="40" y1={y} x2="265" y2={y}
-            stroke={colors.border} strokeWidth="0.5" strokeDasharray="3,5" />
+          <line
+            key={y}
+            x1="40"
+            y1={y}
+            x2="265"
+            y2={y}
+            stroke={colors.border}
+            strokeWidth="0.5"
+            strokeDasharray="3,5"
+          />
         ))}
         {[80, 120, 160, 200, 240].map((x) => (
-          <line key={x} x1={x} y1="15" x2={x} y2="345"
-            stroke={colors.border} strokeWidth="0.5" strokeDasharray="3,5" />
+          <line
+            key={x}
+            x1={x}
+            y1="15"
+            x2={x}
+            y2="345"
+            stroke={colors.border}
+            strokeWidth="0.5"
+            strokeDasharray="3,5"
+          />
         ))}
 
         {/* rutas activas */}
@@ -84,7 +106,10 @@ export default function ColombiaMap({ rutas = [] }: { rutas?: Ruta[] }) {
             <line
               key={i}
               className="route-line"
-              x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1]}
+              x1={a[0]}
+              y1={a[1]}
+              x2={b[0]}
+              y2={b[1]}
               stroke={colors.amber}
               strokeWidth="1.5"
               style={{ animationDelay: `${i * 0.8}s` }}
@@ -103,7 +128,8 @@ export default function ColombiaMap({ rutas = [] }: { rutas?: Ruta[] }) {
               )}
               <circle cx={cx} cy={cy} r={3} fill={color} opacity={isActive ? 1 : 0.5} />
               <text
-                x={cx + 6} y={cy + 4}
+                x={cx + 6}
+                y={cy + 4}
                 fontSize={7}
                 fill={color}
                 opacity={isActive ? 0.9 : 0.45}

@@ -6,7 +6,9 @@ export function usePuertos(params: { q?: string; page?: number; size?: number } 
   return useQuery({
     queryKey: ['puertos', params],
     queryFn: async () => {
-      const p = Object.fromEntries(Object.entries(params).filter(([, v]) => v !== undefined && v !== ''))
+      const p = Object.fromEntries(
+        Object.entries(params).filter(([, v]) => v !== undefined && v !== '')
+      )
       const { data } = await api.get<PaginatedResponse<Puerto>>('/puertos', { params: p })
       return data
     },

@@ -1,21 +1,30 @@
-import pytest
-
-
 def _get_token(client) -> str:
-    client.post("/api/v1/auth/register", json={
-        "email": "tester_c@test.co", "password": "pass1234", "nombre": "Tester",
-    })
-    res = client.post("/api/v1/auth/login", data={"username": "tester_c@test.co", "password": "pass1234"})
+    client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": "tester_c@test.co",
+            "password": "pass1234",
+            "nombre": "Tester",
+        },
+    )
+    res = client.post(
+        "/api/v1/auth/login", data={"username": "tester_c@test.co", "password": "pass1234"}
+    )
     return res.json()["access_token"]
 
 
-def _auth(token): return {"Authorization": f"Bearer {token}"}
+def _auth(token):
+    return {"Authorization": f"Bearer {token}"}
 
 
 def _cliente_payload(nit="900000001-1"):
     return {
-        "nombre": "Empresa Test", "nit": nit, "email": "empresa@test.co",
-        "telefono": "3101234567", "direccion": "Cra 1 #1-1", "ciudad": "Bogotá",
+        "nombre": "Empresa Test",
+        "nit": nit,
+        "email": "empresa@test.co",
+        "telefono": "3101234567",
+        "direccion": "Cra 1 #1-1",
+        "ciudad": "Bogotá",
     }
 
 
@@ -60,7 +69,9 @@ def test_get_cliente_not_found(client):
 def test_update_cliente(client):
     token = _get_token(client)
     created = client.post("/api/v1/clientes", json=_cliente_payload(), headers=_auth(token)).json()
-    res = client.put(f"/api/v1/clientes/{created['id']}", json={"ciudad": "Medellín"}, headers=_auth(token))
+    res = client.put(
+        f"/api/v1/clientes/{created['id']}", json={"ciudad": "Medellín"}, headers=_auth(token)
+    )
     assert res.status_code == 200
     assert res.json()["ciudad"] == "Medellín"
 
@@ -81,7 +92,9 @@ def test_delete_cliente(admin_client):
 
 def test_delete_cliente_requiere_admin(client):
     token = _get_token(client)
-    created = client.post("/api/v1/clientes", json=_cliente_payload("NIT-PERM-001"), headers=_auth(token)).json()
+    created = client.post(
+        "/api/v1/clientes", json=_cliente_payload("NIT-PERM-001"), headers=_auth(token)
+    ).json()
     res = client.delete(f"/api/v1/clientes/{created['id']}", headers=_auth(token))
     assert res.status_code == 403
 
@@ -94,7 +107,11 @@ def test_delete_cliente_not_found(admin_client):
 def test_list_with_search(client):
     token = _get_token(client)
     client.post("/api/v1/clientes", json=_cliente_payload("111-1"), headers=_auth(token))
-    client.post("/api/v1/clientes", json={**_cliente_payload("222-2"), "nombre": "Otra Empresa", "ciudad": "Cali"}, headers=_auth(token))
+    client.post(
+        "/api/v1/clientes",
+        json={**_cliente_payload("222-2"), "nombre": "Otra Empresa", "ciudad": "Cali"},
+        headers=_auth(token),
+    )
 
     res = client.get("/api/v1/clientes?q=Otra", headers=_auth(token))
     assert res.status_code == 200

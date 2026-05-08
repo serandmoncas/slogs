@@ -3,11 +3,13 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.dependencies import get_current_user, require_admin
-from app.schemas.producto import ProductoCreate, ProductoUpdate, ProductoResponse
 from app.schemas.common import PaginatedResponse
+from app.schemas.producto import ProductoCreate, ProductoResponse, ProductoUpdate
 from app.services import producto_service
 
-router = APIRouter(prefix="/productos", tags=["Productos"], dependencies=[Depends(get_current_user)])
+router = APIRouter(
+    prefix="/productos", tags=["Productos"], dependencies=[Depends(get_current_user)]
+)
 
 
 @router.get("", response_model=PaginatedResponse[ProductoResponse])
@@ -35,6 +37,8 @@ def update_producto(id: int, data: ProductoUpdate, db: Session = Depends(get_db)
     return producto_service.update_producto(db, id, data)
 
 
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)])
+@router.delete(
+    "/{id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)]
+)
 def delete_producto(id: int, db: Session = Depends(get_db)):
     producto_service.delete_producto(db, id)

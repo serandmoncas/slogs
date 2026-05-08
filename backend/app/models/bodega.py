@@ -1,4 +1,5 @@
-from sqlalchemy import String, Integer, Enum as SAEnum
+from sqlalchemy import Enum as SAEnum
+from sqlalchemy import Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base, TimestampMixin

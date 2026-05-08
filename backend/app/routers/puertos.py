@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.dependencies import get_current_user, require_admin
-from app.schemas.puerto import PuertoCreate, PuertoUpdate, PuertoResponse
 from app.schemas.common import PaginatedResponse
+from app.schemas.puerto import PuertoCreate, PuertoResponse, PuertoUpdate
 from app.services import puerto_service
 
 router = APIRouter(prefix="/puertos", tags=["Puertos"], dependencies=[Depends(get_current_user)])
@@ -35,6 +35,8 @@ def update_puerto(id: int, data: PuertoUpdate, db: Session = Depends(get_db)):
     return puerto_service.update_puerto(db, id, data)
 
 
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)])
+@router.delete(
+    "/{id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_admin)]
+)
 def delete_puerto(id: int, db: Session = Depends(get_db)):
     puerto_service.delete_puerto(db, id)

@@ -2,14 +2,25 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import api from '@/lib/api'
 import type { EnvioTerrestre, PaginatedResponse } from '@/types'
 
-interface Filters { estado?: string; fecha_inicio?: string; fecha_fin?: string; cliente_id?: number; page?: number; size?: number }
+interface Filters {
+  estado?: string
+  fecha_inicio?: string
+  fecha_fin?: string
+  cliente_id?: number
+  page?: number
+  size?: number
+}
 
 export function useEnviosTerrestres(filters: Filters = {}) {
   return useQuery({
     queryKey: ['envios-terrestres', filters],
     queryFn: async () => {
-      const params = Object.fromEntries(Object.entries(filters).filter(([, v]) => v !== undefined && v !== ''))
-      const { data } = await api.get<PaginatedResponse<EnvioTerrestre>>('/envios/terrestres', { params })
+      const params = Object.fromEntries(
+        Object.entries(filters).filter(([, v]) => v !== undefined && v !== '')
+      )
+      const { data } = await api.get<PaginatedResponse<EnvioTerrestre>>('/envios/terrestres', {
+        params,
+      })
       return data
     },
   })

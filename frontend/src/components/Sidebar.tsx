@@ -4,34 +4,52 @@ import { usePathname } from 'next/navigation'
 import { colors, fonts, radius } from '@/lib/styles'
 
 const NAV = [
-  { href: '/dashboard',   label: 'Dashboard',   icon: '◈' },
-  { href: '/terrestres',  label: 'Terrestres',  icon: '◉' },
-  { href: '/maritimos',   label: 'Marítimos',   icon: '◈' },
-  { href: '/clientes',    label: 'Clientes',    icon: '◎' },
-  { href: '/productos',   label: 'Productos',   icon: '◉' },
-  { href: '/bodegas',     label: 'Bodegas',     icon: '◈' },
-  { href: '/puertos',     label: 'Puertos',     icon: '◎' },
+  { href: '/dashboard', label: 'Dashboard', icon: '◈' },
+  { href: '/terrestres', label: 'Terrestres', icon: '◉' },
+  { href: '/maritimos', label: 'Marítimos', icon: '◈' },
+  { href: '/clientes', label: 'Clientes', icon: '◎' },
+  { href: '/productos', label: 'Productos', icon: '◉' },
+  { href: '/bodegas', label: 'Bodegas', icon: '◈' },
+  { href: '/puertos', label: 'Puertos', icon: '◎' },
 ]
 
 export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <aside style={{
-      width: 220,
-      minHeight: '100vh',
-      background: colors.sidebar,
-      borderRight: `1px solid ${colors.border}`,
-      display: 'flex',
-      flexDirection: 'column',
-      flexShrink: 0,
-    }}>
+    <aside
+      style={{
+        width: 220,
+        minHeight: '100vh',
+        background: colors.sidebar,
+        borderRight: `1px solid ${colors.border}`,
+        display: 'flex',
+        flexDirection: 'column',
+        flexShrink: 0,
+      }}
+    >
       {/* Logo */}
       <div style={{ padding: '24px 20px 16px', borderBottom: `1px solid ${colors.border}` }}>
-        <div style={{ fontFamily: fonts.display, fontSize: 22, fontWeight: 700, color: colors.amber, letterSpacing: '0.04em' }}>
+        <div
+          style={{
+            fontFamily: fonts.display,
+            fontSize: 22,
+            fontWeight: 700,
+            color: colors.amber,
+            letterSpacing: '0.04em',
+          }}
+        >
           SLOGS
         </div>
-        <div style={{ fontFamily: fonts.body, fontSize: 11, color: colors.textDim, marginTop: 2, letterSpacing: '0.08em' }}>
+        <div
+          style={{
+            fontFamily: fonts.body,
+            fontSize: 11,
+            color: colors.textDim,
+            marginTop: 2,
+            letterSpacing: '0.08em',
+          }}
+        >
           SIATA LOGISTICS
         </div>
       </div>
@@ -69,20 +87,28 @@ export default function Sidebar() {
       </nav>
 
       {/* Status widget */}
-      <div style={{
-        padding: '14px 16px',
-        borderTop: `1px solid ${colors.border}`,
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-      }}>
-        <div style={{
-          width: 8, height: 8, borderRadius: '50%',
-          background: colors.green,
-          boxShadow: `0 0 6px ${colors.green}`,
-        }} />
+      <div
+        style={{
+          padding: '14px 16px',
+          borderTop: `1px solid ${colors.border}`,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+        }}
+      >
+        <div
+          style={{
+            width: 8,
+            height: 8,
+            borderRadius: '50%',
+            background: colors.green,
+            boxShadow: `0 0 6px ${colors.green}`,
+          }}
+        />
         <div>
-          <div style={{ fontSize: 11, color: colors.textMuted, fontFamily: fonts.body }}>Sistema</div>
+          <div style={{ fontSize: 11, color: colors.textMuted, fontFamily: fonts.body }}>
+            Sistema
+          </div>
           <div style={{ fontSize: 11, color: colors.green, fontFamily: fonts.mono }}>Online</div>
         </div>
       </div>

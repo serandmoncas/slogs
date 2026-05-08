@@ -2,13 +2,14 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.models.producto import Producto
-from app.schemas.producto import ProductoCreate, ProductoUpdate
-from app.schemas.common import PaginatedResponse
-from app.schemas.producto import ProductoResponse
 from app.repositories import producto_repo
+from app.schemas.common import PaginatedResponse
+from app.schemas.producto import ProductoCreate, ProductoResponse, ProductoUpdate
 
 
-def list_productos(db: Session, q: str | None, page: int, size: int) -> PaginatedResponse[ProductoResponse]:
+def list_productos(
+    db: Session, q: str | None, page: int, size: int
+) -> PaginatedResponse[ProductoResponse]:
     items, total = producto_repo.list_all(db, q, page, size)
     return PaginatedResponse(items=items, total=total, page=page, size=size)
 
