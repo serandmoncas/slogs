@@ -1,6 +1,7 @@
 # SLOGS — Siata Logistics System
 
 [![Backend CI](https://github.com/serandmoncas/slogs/actions/workflows/backend.yml/badge.svg)](https://github.com/serandmoncas/slogs/actions/workflows/backend.yml)
+[![codecov](https://codecov.io/gh/serandmoncas/slogs/branch/main/graph/badge.svg)](https://codecov.io/gh/serandmoncas/slogs)
 [![CodeQL](https://github.com/serandmoncas/slogs/actions/workflows/codeql.yml/badge.svg)](https://github.com/serandmoncas/slogs/actions/workflows/codeql.yml)
 
 Sistema de gestión de envíos terrestres y marítimos para SIATA Logistics. Prueba técnica nivel Senior — implementa todos los ítems requeridos y todos los bonus opcionales.
